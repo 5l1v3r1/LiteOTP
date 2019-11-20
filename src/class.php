@@ -26,7 +26,6 @@
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-
 class Otp  {
     protected $user_agent;
 
@@ -59,22 +58,38 @@ class Otp  {
     {
         if(isset($no) and is_int($no)) {
             if($otp === 'tokopedia') {
-                return self::post('https://www.tokocash.com/oauth/otp','msisdn='.$no.'&accept=call');
+                ob_start();
+                echo self::post('https://www.tokocash.com/oauth/otp','msisdn='.$no.'&accept=call');
+                $res=json_decode(ob_get_clean(), true);
+                if($res['code'] == 412558) {
+                    throw new RuntimeException('Limit reached');
+                }
             }
 
             elseif($otp === 'jdid') {
-                return self::post('http://sc.jd.id/phone/sendPhoneSms','phone='.$no.'&smsType=1');
+                ob_start();
+                echo self::post('http://sc.jd.id/phone/sendPhoneSms','phone='.$no.'&smsType=1');
+                $res=ob_get_clean();
+                if(preg_match('/302/',$res)) {
+                    throw new RuntimeException('Limit reached'); 
+                }
             }
 
             elseif($otp === 'phd') {
-                return self::post('https://www.phd.co.id/en/users/sendOTP','phone_number='.$no);
+                ob_start();
+                echo self::post('https://www.phd.co.id/en/users/sendOTP','phone_number='.$no);
+                $res=json_decode(ob_get_clean(), true);
+                if(isset($res['error'])) {
+                    throw new RuntimeException('Limit reached');
+                }
             }
+
             else {
-                throw new Exception('Wrong OTP server or data type');
+                throw new BadMethodCallException('Wrong OTP server or data type');
             }
         }
         else {
-            throw new Exception('Phone_number not an integer');
+            throw new BadMethodCallException('Phone_number not an integer');
         }
     }
 }
