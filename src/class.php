@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This is free and unencumbered software released into the public domain.
  *
@@ -26,6 +25,7 @@
  *
  * For more information, please refer to <http://unlicense.org/>
  */
+namespace Spammer;
 class Otp  {
     protected $user_agent;
 
@@ -62,7 +62,7 @@ class Otp  {
                 echo self::post('https://www.tokocash.com/oauth/otp','msisdn='.$no.'&accept=call');
                 $res=json_decode(ob_get_clean(), true);
                 if($res['code'] == 412558) {
-                    throw new RuntimeException('Limit reached');
+                    throw new \RuntimeException('Limit reached');
                 }
             }
 
@@ -71,7 +71,7 @@ class Otp  {
                 echo self::post('http://sc.jd.id/phone/sendPhoneSms','phone='.$no.'&smsType=1');
                 $res=ob_get_clean();
                 if(preg_match('/302/',$res)) {
-                    throw new RuntimeException('Limit reached'); 
+                    throw new \RuntimeException('Limit reached'); 
                 }
             }
 
@@ -80,16 +80,16 @@ class Otp  {
                 echo self::post('https://www.phd.co.id/en/users/sendOTP','phone_number='.$no);
                 $res=json_decode(ob_get_clean(), true);
                 if(isset($res['error'])) {
-                    throw new RuntimeException('Limit reached');
+                    throw new \RuntimeException('Limit reached');
                 }
             }
 
             else {
-                throw new BadMethodCallException('Wrong OTP server or data type');
+                throw new \BadMethodCallException('Wrong OTP server or data type');
             }
         }
         else {
-            throw new BadMethodCallException('Phone_number not an integer');
+            throw new \BadMethodCallException('Phone_number not an integer');
         }
     }
 }

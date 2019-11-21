@@ -64,11 +64,11 @@ echo $B."\n".'Team    : BlackHole Security         '.$R.'+';
 echo $B."\n".'Version : 2.5                        '.$R.'+';
 echo $B."\n".'Date    : 13-03-2018                 '.$R.'+';
 echo $R."\n".'++++++++++++++++++++++++++++++++++++++'.$G.$X."\n";
-if($argc<2) {
-    throw new BadMethodCallException('Input No List');
-}
 try {
-    $bom=new Otp();
+    $bom=new Spammer\Otp();
+    if($argc<2) {
+        throw new \BadMethodCallException('Input No List');
+    }
     $argv[1]=trim($argv[1]);
     if(is_numeric($argv[1])) {
         $bom->sendOtp((int)$argv[1],'tokopedia');
@@ -76,7 +76,6 @@ try {
             fprintf(STDOUT,$G.'Send OTP to '.$Y.'['.$argv[1].']'.$X);
             $bom->sendOtp((int)$argv[1],'jdid');
             $bom->sendOtp((int)$argv[1],'phd');
-            $bom->sendOtp((int)$argv[1],'telkomsel');
         }
     }
     else if(file_exists($argv[1])) {
@@ -92,7 +91,7 @@ try {
         }
     }
     else {
-        throw new BadMethodCallException('File not exist'.$argv[1]);
+        throw new \BadMethodCallException('File not exist'.$argv[1]);
     }
 }
 catch(RuntimeException $e) {
