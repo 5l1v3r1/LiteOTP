@@ -13,7 +13,7 @@ For Linux environments
 
 ```sh
 $ sudo apt install php php-curl curl
-$ sudo curl https://raw.githubusercontent.com/Cvar1984/LiteOTP/master/build/main.phar --output /usr/local/bin/lite
+$ sudo curl https://raw.githubusercontent.com/Cvar1984/LiteOTP/error/build/main.phar --output /usr/local/bin/lite
 $ chmod +x /usr/local/bin/lite
 $ lite /foo/bar/test_list.txt
 ```
@@ -22,7 +22,7 @@ For Android Termux environments
 
 ```sh
 $ apt install php curl
-$ curl https://raw.githubusercontent.com/Cvar1984/LiteOTP/master/build/main.phar --output $PREFIX/bin/lite
+$ curl https://raw.githubusercontent.com/Cvar1984/LiteOTP/error/build/main.phar --output $PREFIX/bin/lite
 $ chmod +x $PREFIX/bin/lite
 $ lite /foo/bar/test_list.txt
 ```
@@ -31,12 +31,14 @@ $ lite /foo/bar/test_list.txt
 // from root directory
 require __DIR__.'/src/class.php';
 try {
-    $test=new Otp();
+    $test=new Spammer\Otp();
     $number_phone='+628xxxxxxxx';
     $number_phone=trim($number_phone);
     $test->sendOtp((int)$number_phone,'api_server');
     var_dump((array) $test);
-} catch(Exception $e) {
+} catch(BadMethodCallException $e) {
+    echo $e->xdebug_message;
+} catch(RuntimeException $e) {
     echo $e->xdebug_message;
 }
 ```
